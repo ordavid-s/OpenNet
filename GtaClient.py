@@ -18,7 +18,7 @@ class GtaClient:
 
     @property
     def identifier(self):
-        return self._mac
+        return self._mac.lower()
 
     @property
     def type(self):

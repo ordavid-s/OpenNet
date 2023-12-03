@@ -22,3 +22,4 @@ class ClientFeatures:
     status = "STATUS"
     client_type = "CLIENT_TYPE"
     priority = "PRIORITY"
+    ssid = "SSID"
