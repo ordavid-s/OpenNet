@@ -22,7 +22,7 @@ class GtaClient:
 
     @property
     def type(self):
-        return self._mac
+        return self._type
 
     @property
     def ip(self):

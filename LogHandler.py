@@ -10,18 +10,23 @@ class LogHandler:
         client_list = {}
         with open(self._logs_path, "r") as log_file:
             for line in log_file.readlines():
-                items = line.split(" ")
-                client = GtaClient.empty_client()
-                for item in items:
-                    key_value = item.split(":")
-                    client.set_value(key_value[0], key_value[1])
-                client_list[client.identifier] = client
+                line = line.rstrip("\n")
+                if line:
+                    try:
+                        items = line.split(" ")
+                        client = GtaClient.empty_client()
+                        for item in items:
+                            key_value = item.split("-")
+                            client.set_value(key_value[0], key_value[1])
+                        client_list[client.identifier] = client
+                    except:
+                        pass # bad line in logs
         return list(client_list.values())
 
 
 
     def write_logs(self, client: GtaClient, status: int) -> None:
         with open(self._logs_path, "a+") as log_file:
-            log_file.write(f"{ClientFeatures.client_type}:{client.type} {ClientFeatures.mac}:{client.identifier}"
-                           f" {ClientFeatures.ip}:{client.ip} {ClientFeatures.status}:{status}"
-                           f" {ClientFeatures.priority}:{client.priority}")
+            log_file.write(f"{ClientFeatures.client_type}-{client.type} {ClientFeatures.mac}-{client.identifier}"
+                           f" {ClientFeatures.ip}-{client.ip} {ClientFeatures.status}-{status}"
+                           f" {ClientFeatures.priority}-{client.priority}\n")

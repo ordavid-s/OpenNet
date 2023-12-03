@@ -51,7 +51,8 @@ class GtaManager:
                 # not in logs so add to logs
                 if not self._client_list.is_included(route):
                     self._client_list.add_client(route)
-                    self._log_handler.write_logs(route, OpCodes.NOT_TRIED)
+                    print(route)
+                    self._log_handler.write_logs(route, OpCodes.UNKNOWN)
 
     def start_spoofing(self, interface: str)->None:
         client = self._client_list.pop_client()
@@ -70,8 +71,6 @@ class GtaManager:
                     self._log_handler.write_logs(route, OpCodes.SUCCESS)
                     self._connection_handler.connect(interface, client, route)
                     return
-                else:
-                    self._log_handler.write_logs(route, OpCodes.UNKNOWN)
 
             # if tried all routes and all failed then mark client as failed
             self._log_handler.write_logs(client, OpCodes.FAIL)

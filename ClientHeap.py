@@ -35,5 +35,5 @@ class ClientHeap:
         return False
 
     def __iter__(self):
-        for item in sorted(self._heap, key=lambda client: client.priority):
+        for _, _, item in sorted(self._heap, key=lambda client: client[2].priority):
             yield item
