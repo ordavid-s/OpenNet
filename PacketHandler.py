@@ -22,13 +22,14 @@ def is_private_ip(ip):
         return False
 
 
-class PcapHandler:
+class PacketHandler:
     def __init__(self, target_network_ssid):
         self._clients = {}
         self._routes = {}
         self._target_network_ssid = target_network_ssid
 
-    def parse_pcap(self, pcap_path: str)->None:
+    def parse_packets(self, pcap_path: str, from_pcap: bool)->None:
+        # split cases if from pcap or not
         # iterate once over pcap and find all bssid associated with ssid
         # iterate second time
         # read pcap and add clients to list

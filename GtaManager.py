@@ -1,18 +1,18 @@
 import LogHandler
 import ClientHeap
 from GtaClient import GtaClient
-import PcapHandler
+import PacketHandler
 import ConnectionHandler
 from constants import *
 
 
 class GtaManager:
-    def __init__(self, target_ssid, pcap_list: list[str], logs_path="./gta_logs.txt", priority_threshold=2):
-        self._pcap_list = pcap_list
+    def __init__(self, target_ssid, psrc_list: list[str], logs_path="./gta_logs.txt", priority_threshold=2):
+        self._psrc_list = psrc_list
         self._log_handler = LogHandler.LogHandler(target_ssid, logs_path)
         self._client_list = ClientHeap.ClientHeap()
         self._route_list = ClientHeap.ClientHeap()
-        self._pcap_analyzer = PcapHandler.PcapHandler(target_ssid)
+        self._packet_analyzer = PacketHandler.PacketHandler(target_ssid)
         self._connection_handler = ConnectionHandler.ConnectionHandler()
         self._priority_threshold = priority_threshold
 
@@ -24,11 +24,11 @@ class GtaManager:
             if client.type == GtaClient.type_route:
                 self._route_list.add_client(client)
 
-    def start_analyzing(self, force_client_retry=True)->None:
-        for pcap in self._pcap_list:
-            self._pcap_analyzer.parse_pcap(pcap)
+    def start_analyzing(self, force_client_retry=True, from_pcap=True)->None:
+        for psrc in self._psrc_list:
+            self._packet_analyzer.parse_packets(psrc, from_pcap)
 
-        for client in self._pcap_analyzer.get_clients():
+        for client in self._packet_analyzer.get_clients():
             # if to ignore logs and force trying pcap clients
             if force_client_retry:
                 self._client_list.add_client(client)
@@ -41,7 +41,7 @@ class GtaManager:
                     self._log_handler.write_logs(client, OpCodes.NOT_TRIED)
 
         # loops over possible routes identified in pcap
-        for route in self._pcap_analyzer.get_routes():
+        for route in self._packet_analyzer.get_routes():
             # if to ignore logs and force trying pcap clients
             if force_client_retry:
                 self._route_list.add_client(route)
