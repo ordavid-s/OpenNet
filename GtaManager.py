@@ -24,8 +24,10 @@ class GtaManager:
             if client.type == GtaClient.type_route:
                 self._route_list.add_client(client)
 
-    def start_analyzing(self, force_client_retry=True, from_pcap=True)->None:
+    def start_analyzing(self, force_client_retry=True, from_pcap=True, verbose=True)->None:
         for psrc in self._psrc_list:
+            if verbose:
+                print(f"(+) Analyzing packet source: {psrc}")
             self._packet_analyzer.parse_packets(psrc, from_pcap)
 
         for client in self._packet_analyzer.get_clients():
@@ -51,10 +53,9 @@ class GtaManager:
                 # not in logs so add to logs
                 if not self._client_list.is_included(route):
                     self._client_list.add_client(route)
-                    print(route)
                     self._log_handler.write_logs(route, OpCodes.UNKNOWN)
 
-    def start_spoofing(self, interface: str)->None:
+    def start_spoofing(self, interface: str, verbose=True)->None:
         client = self._client_list.pop_client()
         # Runs over clients and tries them by order of client priority
         while client:
@@ -63,10 +64,16 @@ class GtaManager:
             if client.priority > self._priority_threshold:
                 client = self._client_list.pop_client()
                 continue
+            if verbose:
+                print(f"(+) Trying Client -> {client}")
             # try every route
             for route in self._route_list:
+                if verbose:
+                    print(f"(+) Trying Route -> {route}")
                 result = self._connection_handler.test_connection(interface, client, route)
                 if result:
+                    if verbose:
+                        print("(+) Success! Logging and Connecting.")
                     # managed to connect
                     # set priority to internet connection for logs
                     client.priority = Priorities.internet_connection
@@ -75,6 +82,8 @@ class GtaManager:
                     self._log_handler.write_logs(route, OpCodes.SUCCESS)
                     self._connection_handler.connect(interface, client, route)
                     return
+                if verbose:
+                    print("(-) Failed connection test")
 
             # if tried all routes and all failed then mark client as failed
             self._log_handler.write_logs(client, OpCodes.FAIL)

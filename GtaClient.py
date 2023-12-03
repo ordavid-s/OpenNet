@@ -58,3 +58,6 @@ class GtaClient:
 
         if key == ClientFeatures.priority:
             self._priority = int(value)
+
+    def __repr__(self):
+        return f"MAC: {self._mac} IP: {self._ip}"
