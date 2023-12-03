@@ -36,6 +36,9 @@ class GtaClient:
     def priority(self):
         return self._priority
 
+    @priority.setter
+    def priority(self, value):
+        self._priority = value
 
     def set_value(self, key: str, value: str):
         if key == ClientFeatures.mac:

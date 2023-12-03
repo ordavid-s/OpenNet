@@ -67,6 +67,10 @@ class GtaManager:
             for route in self._route_list:
                 result = self._connection_handler.test_connection(interface, client, route)
                 if result:
+                    # managed to connect
+                    # set priority to internet connection for logs
+                    client.priority = Priorities.internet_connection
+                    route.priority = Priorities.internet_connection_route
                     self._log_handler.write_logs(client, OpCodes.SUCCESS)
                     self._log_handler.write_logs(route, OpCodes.SUCCESS)
                     self._connection_handler.connect(interface, client, route)

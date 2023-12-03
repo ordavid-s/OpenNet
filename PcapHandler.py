@@ -29,6 +29,11 @@ class PcapHandler:
 
     def parse_pcap(self, pcap_path: str)->None:
         # read pcap and add clients to list
+        # check toDs and fromDs to find ap and station
+        # add ap to router list with priority default_route
+        # calculate priority for station:
+        # 1. check if communicated with internet
+        # 2. check if has both mac and ip saved (can be from prior packets)
         pass
 
     def get_clients(self)->list[GtaClient]:
