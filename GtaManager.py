@@ -7,12 +7,12 @@ from constants import *
 
 
 class GtaManager:
-    def __init__(self, pcap_list: list[str], logs_path="./gta_logs.txt", priority_threshold=2):
+    def __init__(self, target_ssid, pcap_list: list[str], logs_path="./gta_logs.txt", priority_threshold=2):
         self._pcap_list = pcap_list
-        self._log_handler = LogHandler.LogHandler(logs_path)
+        self._log_handler = LogHandler.LogHandler(target_ssid, logs_path)
         self._client_list = ClientHeap.ClientHeap()
         self._route_list = ClientHeap.ClientHeap()
-        self._pcap_analyzer = PcapHandler.PcapHandler()
+        self._pcap_analyzer = PcapHandler.PcapHandler(target_ssid)
         self._connection_handler = ConnectionHandler.ConnectionHandler()
         self._priority_threshold = priority_threshold
 
