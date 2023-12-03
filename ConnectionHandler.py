@@ -7,5 +7,5 @@ class ConnectionHandler:
     def test_connection(self, interface: str, client: GtaClient, route: GtaClient)->bool:
         pass
 
-    def connect(self, client: GtaClient)->bool:
+    def connect(self, interface: str, client: GtaClient, route: GtaClient)->bool:
         pass

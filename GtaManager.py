@@ -7,13 +7,14 @@ from constants import *
 
 
 class GtaManager:
-    def __init__(self, pcap_list: list[str], logs_path="./gta_logs.txt"):
+    def __init__(self, pcap_list: list[str], logs_path="./gta_logs.txt", priority_threshold=2):
         self._pcap_list = pcap_list
         self._log_handler = LogHandler.LogHandler(logs_path)
         self._client_list = ClientHeap.ClientHeap()
         self._route_list = ClientHeap.ClientHeap()
         self._pcap_analyzer = PcapHandler.PcapHandler()
         self._connection_handler = ConnectionHandler.ConnectionHandler()
+        self._priority_threshold = priority_threshold
 
     def load_logs(self)->None:
         old_clients = self._log_handler.parse_logs()
@@ -54,17 +55,25 @@ class GtaManager:
         client = self._client_list.pop_client()
         # Runs over clients and tries them by order of client priority
         while client:
+            # skip clients who don't make priority threshold
+            # used to not trigger client disconnect by AP
+            if client.priority > self._priority_threshold:
+                client = self._client_list.pop_client()
+                continue
+            # try every route
             for route in self._route_list:
                 result = self._connection_handler.test_connection(interface, client, route)
                 if result:
                     self._log_handler.write_logs(client, OpCodes.SUCCESS)
                     self._log_handler.write_logs(route, OpCodes.SUCCESS)
+                    self._connection_handler.connect(interface, client, route)
                     return
                 else:
                     self._log_handler.write_logs(route, OpCodes.UNKNOWN)
 
             # if tried all routes and all failed then mark client as failed
             self._log_handler.write_logs(client, OpCodes.FAIL)
+            client = self._client_list.pop_client()
 
 
 
