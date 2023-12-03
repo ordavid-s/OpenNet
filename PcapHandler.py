@@ -30,6 +30,7 @@ class PcapHandler:
 
     def parse_pcap(self, pcap_path: str)->None:
         # iterate once over pcap and find all bssid associated with ssid
+        # iterate second time
         # read pcap and add clients to list
         # check if from target network
         # check toDs and fromDs to find ap and station
