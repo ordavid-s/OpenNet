@@ -35,6 +35,7 @@ class GtaManager:
                 self._log_handler.write_logs(client, OpCodes.NOT_TRIED)
             # if to not ignore clients found in logs
             else:
+                # not in logs so add to logs
                 if not self._client_list.is_included(client):
                     self._client_list.add_client(client)
                     self._log_handler.write_logs(client, OpCodes.NOT_TRIED)
@@ -47,6 +48,7 @@ class GtaManager:
                 self._log_handler.write_logs(route, OpCodes.NOT_TRIED)
             # if to not ignore routes found in logs
             else:
+                # not in logs so add to logs
                 if not self._client_list.is_included(route):
                     self._client_list.add_client(route)
                     self._log_handler.write_logs(route, OpCodes.NOT_TRIED)
