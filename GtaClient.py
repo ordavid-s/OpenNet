@@ -1,4 +1,5 @@
 import ipaddress
+from constants import *
 
 def is_private_ip(ip):
     try:
@@ -21,13 +22,37 @@ def is_private_ip(ip):
 
 
 class GtaClient:
-    def __init__(self, **kwargs):
-        self.src_mac = kwargs['srcMac']
-        self.dst_mac = kwargs['dstMac']
-        self.src_ip = kwargs['src_ip']
-        self.dst_ip = kwargs['dst_ip']
-        self.timestampSeconds = kwargs['timestamp']
+
+    @staticmethod
+    def empty_client():
+        return GtaClient("", "", -1)
+
+    def __init__(self, mac: str, ip: str, status: int):
+        self._mac = mac
+        self._ip = ip
+        self._status = status
 
     @property
     def identifier(self):
-        return self.src_mac
+        return self._mac
+
+    @property
+    def ip(self):
+        return self._ip
+
+    @property
+    def status(self):
+        return self._status
+
+    def set_value(self, key: str, value: str):
+        if key == ClientFeatures.mac:
+            self._mac = value
+            return
+
+        if key == ClientFeatures.ip:
+            self._ip = value
+            return
+
+        if key == ClientFeatures.status:
+            self._status = int(value)
+            return

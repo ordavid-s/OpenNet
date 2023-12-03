@@ -18,6 +18,9 @@ class GtaManager:
         for client in old_clients:
             self._client_list.add_client(client)
 
+    def find_route(self):
+
+
     def start_analyzing(self, force_client_retry=True)->None:
         for pcap in self._pcap_list:
             self._pcap_analyzer.parse_pcap(pcap)
