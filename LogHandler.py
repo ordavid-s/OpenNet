@@ -22,5 +22,6 @@ class LogHandler:
 
     def write_logs(self, client: GtaClient, status: int) -> None:
         with open(self._logs_path, "a+") as log_file:
-            log_file.write(f"{ClientFeatures.mac}:{client.identifier}"
-                           f" {ClientFeatures.ip}:{client.ip} {ClientFeatures.status}:{status}")
+            log_file.write(f"{ClientFeatures.client_type}:{client.type} {ClientFeatures.mac}:{client.identifier}"
+                           f" {ClientFeatures.ip}:{client.ip} {ClientFeatures.status}:{status}"
+                           f" {ClientFeatures.priority}:{client.priority}")

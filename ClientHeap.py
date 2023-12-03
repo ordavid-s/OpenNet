@@ -11,7 +11,6 @@ class ClientHeap:
     def add_client(self, client: GtaClient)->None:
         pass
 
-
     def pop_client(self)->GtaClient:
         pass
 
@@ -19,3 +18,7 @@ class ClientHeap:
         if self._client_finder.get(client.identifier, None):
             return True
         return False
+
+    def __iter__(self):
+        for item in self._heap:
+            yield item
